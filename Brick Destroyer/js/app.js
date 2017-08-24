@@ -3,11 +3,13 @@ var ballY = 75;
 var ballSpeedX = 5;
 var ballSpeedY = 7;
 
-const BRICK_W = 100;
-const BRICK_H = 50;
-const BRICK_COUNT = 8;
+const BRICK_W = 80;
+const BRICK_H = 20;
+const BRICK_GAP = 2;
+const BRICK_COLS = 10;
+const BRICK_ROWS = 14;
 
-var brickGrid = new Array(BRICK_COUNT);
+var brickGrid = new Array(BRICK_COLS * BRICK_ROWS);
 
 const PADDLE_WIDTH = 100;
 const PADDLE_THICKNESS = 10;
@@ -29,10 +31,11 @@ function updateMousePos(evt) {
 	paddleX = mouseX - PADDLE_WIDTH / 2;
 }
 
-function brickReset (){
-	for(var i=0;i<BRICK_COUNT;i++){
+function brickReset() {
+	for (var i = 0; i < BRICK_COLS * BRICK_ROWS; i++) {
 		brickGrid[i] = true;
 	}
+	
 }
 
 window.onload = function() {
@@ -76,6 +79,17 @@ function moveAll() {
 	if (ballY < 0) { //top
 		ballSpeedY *= -1;
 	}
+	
+	var ballBrickCol = Math.floor(ballX / BRICK_W);
+	var ballBrickRow = Math.floor(ballY / BRICK_H);
+	var brickIndexUnderBall = rowColToArrayIndex(ballBrickCol,ballBrickRow)
+	colorText(ballBrickCol + "," + ballBrickRow + ":" + brickIndexUnderBall, ballX + 15, ballY + 15, "yellow")
+	
+	if(brickIndexUnderBall >= 0 &&
+		brickIndexUnderBall < BRICK_COLS * BRICK_ROWS){
+		brickGrid[brickIndexUnderBall] = false;
+	}
+
 
 	var paddleTopEdgeY = canvas.height - PADDLE_DIST_FROM_EDGE;
 	var paddleBottomEdgeY = paddleTopEdgeY + PADDLE_THICKNESS;
@@ -96,10 +110,21 @@ function moveAll() {
 	}
 }
 
+function rowColToArrayIndex(col,row){
+	return col + BRICK_COLS * row
+}
+
+
 function drawBricks() {
-	for (var i = 0; i < BRICK_COUNT; i++) {
-		if (brickGrid[i]) {
-			colorRect(BRICK_W * i, 0, BRICK_W - 2, BRICK_H, 'blue')
+	
+	for (var eachRow = 0; eachRow < BRICK_ROWS; eachRow++) {
+		for (var eachCol = 0; eachCol < BRICK_COLS; eachCol++) {
+			
+			var arrayIndex = rowColToArrayIndex(eachCol,eachRow);
+			if (brickGrid[arrayIndex]) {
+				colorRect(BRICK_W * eachCol, BRICK_H * eachRow, 
+									BRICK_W - BRICK_GAP, BRICK_H - BRICK_GAP, 'blue');
+			}
 		}
 	}
 }
@@ -113,8 +138,7 @@ function drawAll() {
 
 	drawBricks();
 
-	colorText(mouseX + "," + mouseY, mouseX + 15, mouseY + 15, "yellow")
-
+	
 }
 
 
