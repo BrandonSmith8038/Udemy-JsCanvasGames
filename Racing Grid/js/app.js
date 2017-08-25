@@ -1,3 +1,6 @@
+var carPic = document.createElement("img");
+var carPicLoaded = false;
+
 var ballX = 75;
 var ballY = 75;
 var ballSpeedX = 5;
@@ -9,21 +12,20 @@ const TRACK_GAP = 2;
 const TRACK_COLS = 20;
 const TRACK_ROWS = 15;
 var trackGrid = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-				 					1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-				 					1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				 					1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
-				 					1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1,
-				 					1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1,
-				 					1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
-				 					1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-				 					1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-				 					1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-				 					1, 0, 2, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-				 					1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
-				 					1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
-				 					1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
-				 					1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-
+				 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
+				 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+				 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
+				 1, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1,
+				 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1,
+				 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
+				 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+				 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+				 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+				 1, 0, 2, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1,
+				 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
+				 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
+				 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
+				 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 var canvas, canvasContext;
 
@@ -37,7 +39,6 @@ function updateMousePos(evt) {
 	mouseX = evt.clientX - rect.left - root.scrollLeft;
 	mouseY = evt.clientY - rect.top - root.scrollTop;
 
-	
 	// cheat / hack to test ball in any position
 	/*ballX = mouseX;
 	ballY = mouseY;
@@ -54,32 +55,31 @@ window.onload = function() {
 
 	canvas.addEventListener('mousemove', updateMousePos);
 
+	carPic.onload = function() {
+		carPicLoaded = true;
+	}
+	carPic.src = "player1car.png";
+
 	ballReset();
 }
 
 function updateAll() {
-	//moveAll();
+	moveAll();
 	drawAll();
 }
 
 function ballReset() {
-		for(var eachRow=0;eachRow<TRACK_ROWS;eachRow++) {
+	for(var eachRow=0;eachRow<TRACK_ROWS;eachRow++) {
 		for(var eachCol=0;eachCol<TRACK_COLS;eachCol++) {
-
 			var arrayIndex = rowColToArrayIndex(eachCol, eachRow); 
-
-			if(trackGrid[arrayIndex] === 2 ) {
-
+			if(trackGrid[arrayIndex] == 2) {
 				trackGrid[arrayIndex] = 0;
 				ballX = eachCol * TRACK_W + TRACK_W/2;
 				ballY = eachRow * TRACK_H + TRACK_H/2;
-				
-			} // end of is this track here
-		} // end of for each track
-	} // end of for each row
-
-} // end of drawTracks func
-
+			}
+		}
+	}
+}
 
 function ballMove() {
 	ballX += ballSpeedX;
@@ -91,11 +91,12 @@ function ballMove() {
 	if(ballX > canvas.width && ballSpeedX > 0.0) { // right
 		ballSpeedX *= -1;
 	}
-	if(ballY < 0&& ballSpeedY > 0.0) { // top
+	if(ballY < 0 && ballSpeedY < 0.0) { // top
 		ballSpeedY *= -1;
 	}
 	if(ballY > canvas.height) { // bottom
 		ballReset();
+		trackReset();
 	}
 }
 
@@ -103,7 +104,7 @@ function isTrackAtColRow(col, row) {
 	if(col >= 0 && col < TRACK_COLS &&
 		row >= 0 && row < TRACK_ROWS) {
 		 var trackIndexUnderCoord = rowColToArrayIndex(col, row);
-		 return trackGrid[trackIndexUnderCoord] === 1;
+		 return (trackGrid[trackIndexUnderCoord] == 1);
 	} else {
 		return false;
 	}
@@ -118,7 +119,7 @@ function ballTrackHandling() {
 		ballTrackRow >= 0 && ballTrackRow < TRACK_ROWS) {
 
 		if(isTrackAtColRow( ballTrackCol,ballTrackRow )) {
-			
+			// console.log(tracksLeft);
 
 			var prevBallX = ballX - ballSpeedX;
 			var prevBallY = ballY - ballSpeedY;
@@ -149,12 +150,10 @@ function ballTrackHandling() {
 	} // end of valid col and row
 } // end of ballTrackHandling func
 
-
 function moveAll() {
 	ballMove();
 	
 	ballTrackHandling();
-	
 }
 
 function rowColToArrayIndex(col, row) {
@@ -168,7 +167,7 @@ function drawTracks() {
 
 			var arrayIndex = rowColToArrayIndex(eachCol, eachRow); 
 
-			if(trackGrid[arrayIndex] === 1 ) {
+			if(trackGrid[arrayIndex] == 1) {
 				colorRect(TRACK_W*eachCol,TRACK_H*eachRow,
 					TRACK_W-TRACK_GAP,TRACK_H-TRACK_GAP, 'blue');
 			} // end of is this track here
@@ -180,7 +179,11 @@ function drawTracks() {
 function drawAll() {
 	colorRect(0,0, canvas.width,canvas.height, 'black'); // clear screen
 
-	colorCircle(ballX,ballY, 10, 'white'); // draw ball
+	//colorCircle(ballX,ballY, 10, 'white'); // draw ball
+	if(carPicLoaded) {
+		canvasContext.drawImage(carPic,
+			ballX - carPic.width/2, ballY - carPic.height/2);
+	}
 
 	drawTracks();
 }
