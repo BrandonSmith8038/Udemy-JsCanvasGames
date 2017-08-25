@@ -1,0 +1,23 @@
+{
+  "name": "udemy-jscanvasgames",
+  "version": "1.0.0",
+  "description": "workthrough for classes at https://www.udemy.com/how-to-program-games/learn/v4/overview",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "jsdoc": "^3.5.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BrandonSmith8038/Udemy-JsCanvasGames.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BrandonSmith8038/Udemy-JsCanvasGames/issues"
+  },
+  "homepage": "https://github.com/BrandonSmith8038/Udemy-JsCanvasGames#readme"
+}
