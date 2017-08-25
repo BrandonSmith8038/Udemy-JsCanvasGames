@@ -49,6 +49,7 @@ window.onload = function() {
 	canvas.addEventListener('mousemove', updateMousePos);
 
 	brickReset();
+	//ballReset();
 }
 
 function updateAll() {
@@ -85,9 +86,14 @@ function moveAll() {
 	var brickIndexUnderBall = rowColToArrayIndex(ballBrickCol,ballBrickRow)
 	colorText(ballBrickCol + "," + ballBrickRow + ":" + brickIndexUnderBall, ballX + 15, ballY + 15, "yellow")
 	
-	if(brickIndexUnderBall >= 0 &&
-		brickIndexUnderBall < BRICK_COLS * BRICK_ROWS){
-		brickGrid[brickIndexUnderBall] = false;
+	if(brickIndexUnderBall >= 0 && ballBrickCol < BRICK_COLS &&
+		ballBrickRow >= 0 && ballBrickRow < BRICK_ROWS){
+		
+		if(brickGrid[brickIndexUnderBall]){
+			brickGrid[brickIndexUnderBall] = false;
+			ballSpeedY *= -1;
+		}
+	
 	}
 
 
