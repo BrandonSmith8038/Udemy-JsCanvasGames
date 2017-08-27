@@ -1,6 +1,6 @@
 var canvas, canvasContext;
 
-var blueCar = new carClass();
+var blueWarrior = new warriorClass();
 
 window.onload = function() {
 	canvas = document.getElementById('gameCanvas');
@@ -17,15 +17,13 @@ function imageLoadingDoneSoStartGame() {
 	setInterval(updateAll, 1000/framesPerSecond);
 
 	setupInput();
-	
+
 	loadLevel(levelOne);
 }
 
-function loadLevel(whichLevel){
-	trackGrid = whichLevel.slice();
-	blueCar.reset(carPic, "Blue Storm");
-	
-	
+function loadLevel(whichLevel) {
+	worldGrid = whichLevel.slice();
+	blueWarrior.reset(warriorPic, "Blue Storm");
 }
 
 function updateAll() {
@@ -34,10 +32,10 @@ function updateAll() {
 }
 
 function moveAll() {
-	blueCar.move();
+	blueWarrior.move();
 }
 
 function drawAll() {
-	drawTracks();
-	blueCar.draw();
+	drawWorld();
+	blueWarrior.draw();
 } 

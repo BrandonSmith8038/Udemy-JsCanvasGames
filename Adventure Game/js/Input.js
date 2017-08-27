@@ -17,7 +17,7 @@ function setupInput() {
 	document.addEventListener('keydown', keyPressed);
 	document.addEventListener('keyup', keyReleased);
 
-	blueCar.setupInput(KEY_UP_ARROW, KEY_RIGHT_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW);
+	blueWarrior.setupInput(KEY_UP_ARROW, KEY_RIGHT_ARROW, KEY_DOWN_ARROW, KEY_LEFT_ARROW);
 } 
 
 function updateMousePos(evt) {
@@ -34,29 +34,29 @@ function updateMousePos(evt) {
 	carSpeedY = -4;*/
 }
 
-function keySet(keyEvent, whichCar, setTo) {
-	if(keyEvent.keyCode == whichCar.controlKeyLeft) {
-		whichCar.keyHeld_TurnLeft = setTo;
+function keySet(keyEvent, setTo) {
+	if(keyEvent.keyCode == blueWarrior.controlKeyLeft) {
+		blueWarrior.keyHeld_TurnLeft = setTo;
 	}
-	if(keyEvent.keyCode == whichCar.controlKeyRight) {
-		whichCar.keyHeld_TurnRight = setTo;
+	if(keyEvent.keyCode == blueWarrior.controlKeyRight) {
+		blueWarrior.keyHeld_TurnRight = setTo;
 	}
-	if(keyEvent.keyCode == whichCar.controlKeyUp) {
-		whichCar.keyHeld_Gas = setTo;
+	if(keyEvent.keyCode == blueWarrior.controlKeyUp) {
+		blueWarrior.keyHeld_Gas = setTo;
 	}
-	if(keyEvent.keyCode == whichCar.controlKeyDown) {
-		whichCar.keyHeld_Reverse = setTo;
+	if(keyEvent.keyCode == blueWarrior.controlKeyDown) {
+		blueWarrior.keyHeld_Reverse = setTo;
 	}
 }
 
 function keyPressed(evt) {
 	// console.log("Key pressed: "+evt.keyCode);
-	keySet(evt, blueCar, true);
+	keySet(evt, true);
 
 	evt.preventDefault();
 }
 
 function keyReleased(evt) {
 	// console.log("Key pressed: "+evt.keyCode);
-	keySet(evt, blueCar, false);
+	keySet(evt, false);
 }
