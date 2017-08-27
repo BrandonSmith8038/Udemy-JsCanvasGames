@@ -1,31 +1,28 @@
-const WORLD_W = 40;
-const WORLD_H = 40;
+const WORLD_W = 50;
+const WORLD_H = 50;
 const WORLD_GAP = 2;
-const WORLD_COLS = 20;
-const WORLD_ROWS = 15;
-var levelOne = [4, 4, 4, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4,
-				 4, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
-				 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-				 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1,
-				 1, 0, 0, 0, 1, 1, 1, 4, 4, 4, 4, 1, 1, 1, 1, 1, 1, 0, 0, 1,
-				 1, 0, 0, 1, 1, 0, 0, 1, 4, 4, 1, 1, 0, 0, 0, 0, 1, 0, 0, 1,
-				 1, 0, 0, 1, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1,
-				 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 5, 0, 0, 1, 0, 0, 1,
-				 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-				 1, 2, 0, 1, 0, 0, 5, 0, 0, 0, 5, 0, 0, 1, 0, 0, 1, 0, 0, 1,
-				 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 5, 0, 0, 1,
-				 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1,
-				 0, 3, 0, 0, 0, 0, 1, 4, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1,
-				 0, 3, 0, 0, 0, 0, 1, 4, 4, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1,
-				 1, 1, 1, 1, 1, 1, 1, 4, 4, 4, 4, 4, 4, 4, 1, 1, 1, 1, 1, 4];
+const WORLD_COLS = 16;
+const WORLD_ROWS = 12;
+var levelOne =  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+				 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 5, 0, 1, 1, 1, 1,
+				 1, 0, 4, 0, 4, 0, 1, 0, 2, 0, 1, 0, 1, 4, 4, 1,
+				 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 5, 1, 5, 1, 1,
+				 1, 1, 1, 5, 1, 1, 1, 0, 4, 0, 1, 0, 0, 0, 1, 1,
+				 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 4, 0, 1, 1,
+				 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1,
+				 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 4, 0, 1, 1,
+				 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1,
+				 1, 0, 5, 0, 5, 0, 5, 0, 3, 0, 1, 1, 1, 1, 1, 1,
+				 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, 1, 1,
+				 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 var worldGrid = [];
 
-const WORLD_ROAD = 0;
-const WORLD_WALL = 1;
-const WORLD_PLAYERSTART = 2;
-const WORLD_GOAL = 3;
-const WORLD_TREE = 4;
-const WORLD_FLAG = 5;
+const TILE_GROUND = 0;
+const TILE_WALL = 1;
+const TILE_PLAYERSTART = 2;
+const TILE_GOAL = 3;
+const TILE_KEY = 4;
+const TILE_DOOR = 5;
 
 function returnTileTypeAtColRow(col, row) {
 	if(col >= 0 && col < WORLD_COLS &&
@@ -37,26 +34,27 @@ function returnTileTypeAtColRow(col, row) {
 	}
 }
 
-function warriorWorldHandling(whichWarrior) {
-	var warriorWorldCol = Math.floor(whichWarrior.x / WORLD_W);
-	var warriorWorldRow = Math.floor(whichWarrior.y / WORLD_H);
+function getTileIndexAtPixelCoord(atX, atY) {
+	var warriorWorldCol = Math.floor(atX / WORLD_W);
+	var warriorWorldRow = Math.floor(atY / WORLD_H);
 	var worldIndexUnderWarrior = rowColToArrayIndex(warriorWorldCol, warriorWorldRow);
 
 	if(warriorWorldCol >= 0 && warriorWorldCol < WORLD_COLS &&
 		warriorWorldRow >= 0 && warriorWorldRow < WORLD_ROWS) {
-		var tileHere = returnTileTypeAtColRow( warriorWorldCol,warriorWorldRow );
-
-		if(tileHere == WORLD_GOAL) {
-			console.log(whichWarrior.name + " WINS!");
-			loadLevel(levelOne);
-		} else if(tileHere != WORLD_ROAD) {
-			whichWarrior.speed *= -0.5;
-		} // end of world found
+		return worldIndexUnderWarrior;
 	} // end of valid col and row
+
+	return undefined;
 } // end of warriorWorldHandling func
 
 function rowColToArrayIndex(col, row) {
 	return col + WORLD_COLS * row;
+}
+
+function tileTypeHasTransparency(checkTileType) {
+	return (checkTileType == TILE_GOAL ||
+			checkTileType == TILE_KEY ||
+			checkTileType == TILE_DOOR);
 }
 
 function drawWorld() {
@@ -71,6 +69,9 @@ function drawWorld() {
 			var tileKindHere = worldGrid[arrayIndex];
 			var useImg = worldPics[tileKindHere];
 
+			if( tileTypeHasTransparency(tileKindHere) ) {
+				canvasContext.drawImage(worldPics[TILE_GROUND],drawTileX,drawTileY);
+			}
 			canvasContext.drawImage(useImg,drawTileX,drawTileY);
 			drawTileX += WORLD_W;
 			arrayIndex++;

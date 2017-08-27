@@ -1,21 +1,16 @@
-const GROUNDSPEED_DECAY_MULT = 0.94;
-const DRIVE_POWER = 0.5;
-const REVERSE_POWER = 0.2;
-const TURN_RATE = 0.06;
-const MIN_SPEED_TO_TURN = 0.5;
+const PLAYER_MOVE_SPEED = 3.0;
 
 function warriorClass() {
 	this.x = 75;
 	this.y = 75;
-	this.ang = 0;
-	this.speed = 0;
 	this.myWarriorPic; // which picture to use
 	this.name = "Untitled Warrior";
+	this.keysHeld = 0;
 
-	this.keyHeld_Gas = false;
-	this.keyHeld_Reverse = false;
-	this.keyHeld_TurnLeft = false;
-	this.keyHeld_TurnRight = false;
+	this.keyHeld_North = false;
+	this.keyHeld_South = false;
+	this.keyHeld_West = false;
+	this.keyHeld_East = false;
 
 	this.controlKeyUp;
 	this.controlKeyRight;
@@ -32,14 +27,14 @@ function warriorClass() {
 	this.reset = function(whichImage, warriorName) {
 		this.name = warriorName;
 		this.myWarriorPic = whichImage;
-		this.speed = 0;
+		this.keysHeld = 0;
+		this.updateKeyReadout();
 
 		for(var eachRow=0;eachRow<WORLD_ROWS;eachRow++) {
 			for(var eachCol=0;eachCol<WORLD_COLS;eachCol++) {
 				var arrayIndex = rowColToArrayIndex(eachCol, eachRow); 
-				if(worldGrid[arrayIndex] == WORLD_PLAYERSTART) {
-					worldGrid[arrayIndex] = WORLD_ROAD;
-					this.ang = -Math.PI/2;
+				if(worldGrid[arrayIndex] == TILE_PLAYERSTART) {
+					worldGrid[arrayIndex] = TILE_GROUND;
 					this.x = eachCol * WORLD_W + WORLD_W/2;
 					this.y = eachRow * WORLD_H + WORLD_H/2;
 					return;
@@ -49,31 +44,62 @@ function warriorClass() {
 		console.log("NO PLAYER START FOUND!");
 	} // end of warriorReset func
 
+	this.updateKeyReadout = function() {
+		document.getElementById("debugText").innerHTML = "Keys: " + this.keysHeld;
+	}
+
 	this.move = function() {
-		this.speed *= GROUNDSPEED_DECAY_MULT;
+		var nextX = this.x;
+		var nextY = this.y;
 
-		if(this.keyHeld_Gas) {
-			this.speed += DRIVE_POWER;
+		if(this.keyHeld_North) {
+			nextY -= PLAYER_MOVE_SPEED;
 		}
-		if(this.keyHeld_Reverse) {
-			this.speed -= REVERSE_POWER;
+		if(this.keyHeld_East) {
+			nextX += PLAYER_MOVE_SPEED;
 		}
-		if(Math.abs(this.speed) > MIN_SPEED_TO_TURN) {
-			if(this.keyHeld_TurnLeft) {
-				this.ang -= TURN_RATE;
-			}
-			if(this.keyHeld_TurnRight) {
-				this.ang += TURN_RATE;
-			}
+		if(this.keyHeld_South) {
+			nextY += PLAYER_MOVE_SPEED;
+		}
+		if(this.keyHeld_West) {
+			nextX -= PLAYER_MOVE_SPEED;
 		}
 
-		this.x += Math.cos(this.ang) * this.speed;
-		this.y += Math.sin(this.ang) * this.speed;
+		var walkIntoTileIndex = getTileIndexAtPixelCoord(nextX, nextY);
+		var walkIntoTileType = TILE_WALL;
 
-		warriorWorldHandling(this);
+		if(walkIntoTileIndex != undefined) {
+			walkIntoTileType = worldGrid[walkIntoTileIndex];
+		}
+
+		switch(walkIntoTileType) {
+			case TILE_GROUND:
+				this.x = nextX;
+				this.y = nextY;
+				break;
+			case TILE_GOAL:
+				console.log(this.name + " WINS!");
+				loadLevel(levelOne);
+				break;
+			case TILE_DOOR:
+				if(this.keysHeld > 0) {
+					this.keysHeld--; // one less key
+					this.updateKeyReadout();
+					worldGrid[walkIntoTileIndex] = TILE_GROUND;
+				}
+				break;
+			case TILE_KEY:
+				this.keysHeld++; // one more key
+				this.updateKeyReadout();
+				worldGrid[walkIntoTileIndex] = TILE_GROUND;
+				break;
+			case TILE_WALL:
+			default:
+				break;
+		}
 	}
 
 	this.draw = function() {
-		drawBitmapCenteredWithRotation(this.myWarriorPic, this.x,this.y, this.ang);
+		drawBitmapCenteredWithRotation(this.myWarriorPic, this.x,this.y, 0);
 	}
 }

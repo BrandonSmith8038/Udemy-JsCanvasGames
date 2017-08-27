@@ -25,11 +25,11 @@ function loadImages() {
 	var imageList = [
 		{varName: warriorPic, theFile: "warrior.png"},
 
-		{worldType: WORLD_ROAD, theFile: "world_road.png"},
-		{worldType: WORLD_WALL, theFile: "world_wall.png"},
-		{worldType: WORLD_GOAL, theFile: "world_goal.png"},
-		{worldType: WORLD_TREE, theFile: "world_tree.png"},
-		{worldType: WORLD_FLAG, theFile: "world_flag.png"}
+		{worldType: TILE_GROUND, theFile: "world_ground.png"},
+		{worldType: TILE_WALL, theFile: "world_wall.png"},
+		{worldType: TILE_GOAL, theFile: "world_goal.png"},
+		{worldType: TILE_KEY, theFile: "world_key.png"},
+		{worldType: TILE_DOOR, theFile: "world_door.png"}
 		];
 
 	picsToLoad = imageList.length;
